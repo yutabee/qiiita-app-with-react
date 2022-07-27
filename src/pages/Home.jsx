@@ -3,15 +3,18 @@ import {css} from '@emotion/react';
 import {Box, Title} from '../components/atoms';
 import axios from 'axios';
 import PostItem from '../components/posts/PostItem';
+import SearchBar from '../components/common/SearchBar';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [query, setQuery] = useState();
 
   const fetchPosts = async () => {
     try {
       const params = {
         page: '1',
         per_page: '20',
+        query,
       };
       const headers = {
         Authorization: `Bearer ${process.env.REACT_APP_QIITA_KEY}`,
@@ -30,13 +33,15 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+    // eslint-disable-next-line
+  }, [query]);
 
   return (
     <Box col>
       <Box css={contaienr} col>
         <Box css={header}>
           <Title size="sm">記事一覧</Title>
+          <SearchBar onEnterPress={value => setQuery(value)} />
         </Box>
         <Box css={postWrapper} col>
           {posts.map((post, index) => (
